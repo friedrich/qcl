@@ -81,8 +81,11 @@ ROUTINE(ext_matrix) {
   dim=(1 << n);
   if(!loc->getRef(sdec(dim-1,"u%ld")+sdec(dim-1)) || loc->getRef(string("u")+sdec(dim)+sdec(dim)))
     EXTERR("illegal register size for matrix operator");
-  tComplex u[dim][dim];
   term* t[dim];
+  vector<vector<tComplex> > u;
+  u.resize(dim);
+  for(i=0;i<dim;i++)
+    u[i].resize(dim);
   for(i=0;i<dim;i++) for(j=0;j<dim;j++) {
     v=loc->getVal(sdec(j,"u%ld")+sdec(i));
     if(!v.isComplex()) EXTERR("invalid matrix element");
@@ -190,7 +193,8 @@ ROUTINE(ext_perm) {
     EXTERR("illegal register size for permutation operator");
   int p[dim];
   int pp[dim];
-  term t[dim];
+  vector<term> t;
+  t.resize(dim);
   for(i=0;i<dim;i++) {
     v=loc->getVal(sdec(i,"p%ld"));
     if(!v.isInt() || v.toInt() < 0 || v.toInt() >= dim) 
@@ -207,7 +211,7 @@ ROUTINE(ext_perm) {
       t[i]=term(bitvec(n,p[i]),1);
     }
   }
-  opPermutation(n,t).apply(*q);
+  opPermutation(n,&t[0]).apply(*q);
   return 0;
 }
 
@@ -221,7 +225,8 @@ ROUTINE(ext_genperm) {
   if(dim!=v.dim())
     EXTERR("illegal register size for permutation operator");
   int p[dim];
-  term t[dim];
+  vector<term> t;
+  t.resize(dim);
   for(i=0;i<dim;i++) p[i]=-1;
   for(i=0;i<dim;i++) p[v[i].toInt()]=i;
   for(i=0;i<dim;i++) {
@@ -232,7 +237,7 @@ ROUTINE(ext_genperm) {
       t[i]=term(bitvec(n,v[i].toInt()),1);
     }
   }
-  opPermutation(n,t).apply(*q);
+  opPermutation(n,&t[0]).apply(*q);
   return 0;
 }
 
