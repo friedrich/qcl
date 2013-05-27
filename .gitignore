@@ -1,3 +1,7 @@
 *.o
 .depend
-
+/yacc.h
+/yacc.cc
+/lex.cc
+/qc/libqc.a
+qcl
